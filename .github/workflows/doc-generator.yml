@@ -1,11 +1,31 @@
 name: Documentation Generator
 run-name: Documentation generation for commit ${{ github.sha }}
-on:
+on: # Push to main occurs which includes a change to something in the /doc folder
   push:
     branches:
       - main
+    paths:
+      - 'doc/**'
 jobs:
   doc_gen:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Hello Github Actions!"
+      - run: echo "One or more updates to /doc have been pushed to main, so now the /docs folder needs to be regenerated on the gh-pages branch."
+      - uses: actions/checkout@gh-pages
+      - name: Pull main into gh-pages
+        run: git pull main
+      - name: Install Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: '18'
+      - name: Install Antora
+        run: npm i antora
+      - name: Generate Site
+        run: npx antora antora-playbook.yml
+      - name: Upload Artifacts
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: build/site
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
