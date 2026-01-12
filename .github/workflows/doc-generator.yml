@@ -7,6 +7,7 @@ on: # Push to main occurs which includes a change to something in the /doc folde
     paths:
       - 'doc/**'
 permissions:
+  pages: write
   id-token: write
 jobs:
   doc_gen:
