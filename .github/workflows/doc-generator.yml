@@ -16,16 +16,9 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - run: echo "One or more updates to /doc have been pushed to main, so now the /docs folder needs to be regenerated on the gh-pages branch."
       - uses: actions/checkout@v6
         with:
-          ref: gh-pages
-          fetch-depth: 0
-      - name: Pull main into gh-pages
-        working-directory: /home/runner/work/Antora-Test/Antora-Test
-        run: |
-          git config user.name "github-actions[bot]" && git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git merge origin/main -m "auto-merge main to gh-pages"
+          ref: main
       - name: Install Node.js
         uses: actions/setup-node@v5
         with:
@@ -34,11 +27,11 @@ jobs:
         run: npm i antora
       - name: Generate Site
         working-directory: /home/runner/work/Antora-Test/Antora-Test/doc
-        run: npx antora generate --to-dir ../docs antora-playbook.yml
+        run: npx antora generate antora-playbook.yml
       - name: Upload Artifacts
         uses: actions/upload-pages-artifact@v4
         with:
-          path: docs
+          path: doc/build/site
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
