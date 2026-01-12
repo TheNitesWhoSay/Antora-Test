@@ -3,8 +3,8 @@ site:
   start_page: project-name::index.adoc
 content:
   sources:
-  - url: ../../
-    start_path: ./docs/doc-src
+  - url: ../
+    start_path: ./doc
     branches: HEAD
 ui:
   bundle:
