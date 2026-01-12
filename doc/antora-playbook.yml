@@ -3,7 +3,7 @@ site:
   start_page: project-name::index.adoc
 content:
   sources:
-  - url: ../
+  - url: .
     start_path: ./doc
     branches: HEAD
 ui:
