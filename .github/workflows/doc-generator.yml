@@ -11,7 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo "One or more updates to /doc have been pushed to main, so now the /docs folder needs to be regenerated on the gh-pages branch."
-      - uses: actions/checkout@gh-pages
+      - uses: actions/checkout@v6
+        with:
+          ref: gh-pages
       - name: Pull main into gh-pages
         run: git pull main
       - name: Install Node.js
