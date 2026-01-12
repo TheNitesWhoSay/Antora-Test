@@ -4,9 +4,15 @@ site:
 content:
   sources:
   - url: ../../
-    start_path: ./doc/doc-src
+    start_path: ./docs/doc-src
     branches: HEAD
 ui:
   bundle:
     url: https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/HEAD/raw/build/ui-bundle.zip?job=bundle-stable
     snapshot: true
+  supplemental_files:
+  - path: ui.yml
+    contents: |
+      static_files:
+      - .nojekyll
+  - path: .nojekyll
