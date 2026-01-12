@@ -12,6 +12,9 @@ permissions:
 jobs:
   doc_gen:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - run: echo "One or more updates to /doc have been pushed to main, so now the /docs folder needs to be regenerated on the gh-pages branch."
       - uses: actions/checkout@v6
