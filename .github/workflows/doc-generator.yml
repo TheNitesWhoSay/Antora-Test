@@ -16,7 +16,7 @@ jobs:
           ref: gh-pages
       - name: Pull main into gh-pages
         working-directory: /home/runner/work/Antora-Test/Antora-Test
-        run: git fetch origin/main && git merge main -m "auto-merge main to gh-pages" --no-ff
+        run: git fetch origin main && git merge main -m "auto-merge main to gh-pages" --no-ff
       - name: Install Node.js
         uses: actions/setup-node@v5
         with:
