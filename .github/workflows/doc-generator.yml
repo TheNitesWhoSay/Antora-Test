@@ -6,6 +6,8 @@ on: # Push to main occurs which includes a change to something in the /doc folde
       - main
     paths:
       - 'doc/**'
+permissions:
+  id-token: write
 jobs:
   doc_gen:
     runs-on: ubuntu-latest
