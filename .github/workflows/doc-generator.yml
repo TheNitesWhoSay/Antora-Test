@@ -6,6 +6,6 @@ on:
       - main
 jobs:
   doc_gen:
-    runs_on: ubuntu-latest
+    runs-on: ubuntu-latest
     steps:
       - run: echo "Hello Github Actions!"
