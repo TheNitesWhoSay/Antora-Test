@@ -27,7 +27,8 @@ jobs:
       - name: Install Antora
         run: npm i antora
       - name: Generate Site
-        run: npx antora doc/antora-playbook.yml
+        working-directory: /home/runner/work/Antora-Test/Antora-Test/doc
+        run: npx antora generate --to-dir ../docs antora-playbook.yml
       - name: Upload Artifacts
         uses: actions/upload-pages-artifact@v4
         with:
