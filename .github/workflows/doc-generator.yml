@@ -15,6 +15,7 @@ jobs:
         with:
           ref: gh-pages
       - name: Pull main into gh-pages
+        working-directory: Antora-Test
         run: git pull main
       - name: Install Node.js
         uses: actions/setup-node@v5
