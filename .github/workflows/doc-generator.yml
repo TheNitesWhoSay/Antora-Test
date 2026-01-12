@@ -1,0 +1,11 @@
+name: Documentation Generator
+run-name: Documentation generation for commit ${{ github.sha }}
+on:
+  push:
+    branches:
+      - main
+jobs:
+  doc_gen:
+    runs_on: ubuntu-latest
+    steps:
+      - run: echo "Hello Github Actions!"
