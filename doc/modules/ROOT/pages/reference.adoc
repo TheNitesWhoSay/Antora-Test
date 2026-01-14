@@ -1,0 +1,49 @@
+= Reference
+:mrdocs:
+
+[#index]
+== Global namespace
+
+=== Types
+
+[cols=1]
+|===
+| Name
+| link:#Foo[`Foo`] 
+|===
+
+[#Foo]
+== Foo
+
+=== Synopsis
+
+Declared in `&lt;lib&period;h&gt;`
+
+[source,cpp,subs="verbatim,replacements,macros,-callouts"]
+----
+struct Foo;
+----
+
+=== Member Functions
+
+[cols=1]
+|===
+| Name
+| link:#Foo-bar[`bar`] 
+|===
+
+[#Foo-bar]
+== link:#Foo[Foo]::bar
+
+=== Synopsis
+
+Declared in `&lt;lib&period;h&gt;`
+
+[source,cpp,subs="verbatim,replacements,macros,-callouts"]
+----
+void
+bar(int a);
+----
+
+
+[.small]#Created with https://www.mrdocs.com[MrDocs]#
