@@ -353,12 +353,12 @@ namespace nf_hist
         constexpr auto operator<=>(const uint6_t & other) const { return value <=> other.value; }
         template <typename T> constexpr auto operator<=>(const T & other) const requires(!std::is_same_v<uint6_t, T>) { return static_cast<T>(value) <=> other; }
         constexpr auto operator &() { return &value; }
-        constexpr auto & operator++() { ++value; return *this; }
-        constexpr auto & operator--() { --value; return *this; }
-        constexpr auto & operator+=(std::uint8_t val) { value += val; return *this; }
-        constexpr auto & operator-=(std::uint8_t val) { value -= val; return *this; }
+        constexpr uint6_t & operator++() { ++value; return *this; }
+        constexpr uint6_t & operator--() { --value; return *this; }
+        constexpr uint6_t & operator+=(std::uint8_t val) { value += val; return *this; }
+        constexpr uint6_t & operator-=(std::uint8_t val) { value -= val; return *this; }
 
-        inline friend auto & operator<<(std::ostream & os, const uint6_t & num) { os << int(num.value); return os; }
+        inline friend std::ostream & operator<<(std::ostream & os, const uint6_t & num) { os << int(num.value); return os; }
     };
     static_assert(sizeof(uint6_t) == sizeof(uint8_t), "Unexpected uint6_t size");
 
@@ -7778,8 +7778,8 @@ namespace nf_hist
             if ( parent != nullptr && --(parent->action_reference_count) == 0 )
                 parent->submit_action();
         }
-        constexpr auto & operator*() noexcept { return parent->mod_root; }
-        constexpr auto operator->() noexcept { return &(parent->mod_root); }
+        constexpr editor & operator*() noexcept { return parent->mod_root; }
+        constexpr editor* operator->() noexcept { return &(parent->mod_root); }
 
         template <class Keys, class ... Pathway>
         auto edit_from_path(path_tagged_keys<Keys, type_tags<Pathway...>, editor<Tracked>> path)
