@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<tagfile>
+<compound kind="namespace">
+  <name/>
+  <filename>reference.adoc#index</filename>
+  <class kind="class">Bar</class>
+</compound>
+<compound kind="class">
+  <name>Bar</name>
+  <filename>reference.adoc#Bar</filename>
+  <member kind="function">
+    <type>Bar&amp;</type>
+    <name>operator++</name>
+    <anchorfile>reference.adoc</anchorfile>
+    <anchor>Bar-operator_inc</anchor>
+    <arglist>()</arglist>
+  </member>
+</compound>
+</tagfile>

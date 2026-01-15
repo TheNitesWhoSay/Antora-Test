@@ -1,0 +1,78 @@
+= Reference
+:mrdocs:
+
+[#index]
+== Global namespace
+
+=== Types
+
+[cols=1]
+|===
+| Name
+| link:#Bar[`Bar`] 
+|===
+
+[#Bar]
+== Bar
+
+=== Synopsis
+
+Declared in `&lt;foo&period;h&gt;`
+
+[source,cpp,subs="verbatim,replacements,macros,-callouts"]
+----
+struct Bar;
+----
+
+=== Member Functions
+
+[cols=2]
+|===
+| Name
+| Description
+| link:#Bar-operator_inc[`operator&plus;&plus;`] 
+| Increment operator
+|===
+
+=== Data Members
+
+[cols=1]
+|===
+| Name
+| link:#Bar-value[`value`] 
+|===
+
+[#Bar-operator_inc]
+== link:#Bar[Bar]::operator&plus;&plus;
+
+Increment operator
+
+=== Synopsis
+
+Declared in `&lt;foo&period;h&gt;`
+
+[source,cpp,subs="verbatim,replacements,macros,-callouts"]
+----
+constexpr
+link:#Bar[Bar]&
+operator&plus;&plus;();
+----
+
+=== Return Value
+
+Reference to the current object
+
+[#Bar-value]
+== link:#Bar[Bar]::value
+
+=== Synopsis
+
+Declared in `&lt;foo&period;h&gt;`
+
+[source,cpp,subs="verbatim,replacements,macros,-callouts"]
+----
+int value = 0;
+----
+
+
+[.small]#Created with https://www.mrdocs.com[MrDocs]#
