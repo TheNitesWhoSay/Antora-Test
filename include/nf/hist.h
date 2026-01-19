@@ -353,12 +353,12 @@ namespace nf_hist
         constexpr auto operator<=>(const uint6_t & other) const { return value <=> other.value; }
         template <typename T> constexpr auto operator<=>(const T & other) const requires(!std::is_same_v<uint6_t, T>) { return static_cast<T>(value) <=> other; }
         constexpr auto operator &() { return &value; }
-        constexpr auto & operator++() { ++value; return *this; }
-        constexpr auto & operator--() { --value; return *this; }
-        constexpr auto & operator+=(std::uint8_t val) { value += val; return *this; }
-        constexpr auto & operator-=(std::uint8_t val) { value -= val; return *this; }
+        constexpr uint6_t & operator++() { ++value; return *this; }
+        constexpr uint6_t & operator--() { --value; return *this; }
+        constexpr uint6_t & operator+=(std::uint8_t val) { value += val; return *this; }
+        constexpr uint6_t & operator-=(std::uint8_t val) { value -= val; return *this; }
 
-        inline friend auto & operator<<(std::ostream & os, const uint6_t & num) { os << int(num.value); return os; }
+        inline friend std::ostream & operator<<(std::ostream & os, const uint6_t & num) { os << int(num.value); return os; }
     };
     static_assert(sizeof(uint6_t) == sizeof(uint8_t), "Unexpected uint6_t size");
 
@@ -566,65 +566,65 @@ namespace nf_hist
         //   leaf_branch: same as branch except this also indicates it's the last branch in the sequence
         //   leaf_sel_branch: same as sel_branch except this also indicates it's the last branch in the sequence
         //                    special case: if this is the first element, it means use the root element
-        high_bits       = 0b11000000,
-        low_bits        = 0b00111111,
+        high_bits       = 0b11000000, //!< the two highest bits of the path_op byte, identifies the type of branch
+        low_bits        = 0b00111111, //!< the six lowest bits of the path_op byte, an index or other data associated with the given branch type
 
-        sel_mask        = 0b01000000,
-        leaf_mask       = 0b10000000,
+        sel_mask        = 0b01000000, //!< mask for checking whether this path_op is branching into a selection
+        leaf_mask       = 0b10000000, //!< mask for checking whether this path_op refers to the final leaf in a path
 
-        branch          = 0b00000000,
-        sel_branch      = 0b01000000,
-        leaf_branch     = 0b10000000,
-        leaf_sel_branch = 0b11000000,
-        root_path       = leaf_sel_branch
+        branch          = 0b00000000, //!< after ANDing with high bits, a path_op with this value can be said to be a regular branch
+        sel_branch      = 0b01000000, //!< after ANDing with high bits, a path_op with this value can be said to be a selection branch
+        leaf_branch     = 0b10000000, //!< after ANDing with high bits, a path_op with this value can be said to be a leaf branch
+        leaf_sel_branch = 0b11000000, //!< after ANDing with high bits, a path_op with this value can be said to be a leaf selection branch
+        root_path       = leaf_sel_branch //!< if this is the first path_op in a path, it means the path refers to the root element
     };
 
     enum class op : std::uint8_t {
         // The first {} is the data required to perform the operation, the --{} is additional data required for fast undos
-        init, // {value}
-        reset, // {} ("value = {};") --{n, value_0, ..., value_n, m, selections}
-        reserve, // {new_size}
-        trim,
-        assign, // {new_size, value} --{n, value_0, ..., value_n, m, selections}
-        assign_default, // {new_size} --{n, value_0, ..., value_n, m, selections}
-        clear_selections, // --{n, index_0, ..., index_n}
-        select_all, // {} --{n, index_0, ..., index_n}
-        select, // {index}
-        select_n, // {n, index_0, ..., index_n}
-        deselect, // {index} --{sel_index}
-        deselect_n,  // {n, index_0, ..., index_n} --{sel_index_0, ..., sel_index_n}
-        toggle_selection, // {index} --{u8_bool_selected, sel_index}
-        toggle_selection_n, // {n, index_0, ..., index_n} --{bitset_index_was_selected, sel_index_0, ..., sel_index_n}
-        sort_selections, // {n, index_0_source_index, ..., index_n_source_index}
-        sort_selections_desc, // {n, index_0_source_index, ..., index_n_source_index}
-        set, // {value} --{prev_value}
-        set_n, // {n, index_0, ..., index_n, value} --{value_0, ..., value_n}
-        set_l, // {value} --{value_0, ..., value_n} // Same as set_n, except the selections make up the indexes
-        append, // {value}
-        append_n, // {n, value_0, ..., value_n}
-        insert, // {index, value}
-        insert_n, // {n, index, value_0, ..., value_n}
-        remove, // {index} --{value, u8_bool_was_selected, sel_index}
-        remove_n, // {n, index_0, ..., index_n} --{value_0, ..., value_n, bitset_index_selected, m, sel_index_0, ..., sel_index_m} where index_0 > ... > index_n
-        remove_l, // {} --{n, index_0, ..., index_n, value_0, ..., value_n, selections} // Same as remove_n, except the selections make up the indexes
-        sort, // {n, index_0_source_index, ..., index_n_source_index}
-        sort_desc, // {n, index_0_source_index, ..., index_n_source_index}
-        swap, // {index_0, index_1}
-        move_up, // {index}
-        move_up_n, // {n, index_0, ..., index_n}
-        move_up_l, // {} --{selections} // Same as move_up_n, except the selections make up the indexes
-        move_top, // {index}
-        move_top_n, // {n, index_0, ... index_n} --{selections}
-        move_top_l, // {} --{selections} // Same as move_top_n, except the selections make up the indexes
-        move_down, // {index}
-        move_down_n, // {n, index_0, ... index_n}
-        move_down_l, // {} --{selections} // Same as move_down_n, except the selections make up the indexes
-        move_bottom, // {index}
-        move_bottom_n, // {n, index_0, ... index_n} --{selections}
-        move_bottom_l, // {} --{selections} // Same as move_down_n, except the selections make up the indexes
-        move_to, // {index, target_index}
-        move_to_n, // {n, target_index, index_0, ..., index_n} --{selections}
-        move_to_l // {target_index} --{selections} // Same as move_to_n, except the selections make up the indexes
+        init,  //!< {value}
+        reset, //!< {} ("value = {};") --{n, value_0, ..., value_n, m, selections}
+        reserve, //!< {new_size}
+        trim, //!< {} -- // no data is associated with the trim operation
+        assign, //!< {new_size, value} --{n, value_0, ..., value_n, m, selections}
+        assign_default, //!< {new_size} --{n, value_0, ..., value_n, m, selections}
+        clear_selections, //!< --{n, index_0, ..., index_n}
+        select_all, //!< {} --{n, index_0, ..., index_n}
+        select, //!< {index}
+        select_n, //!< {n, index_0, ..., index_n}
+        deselect, //!< {index} --{sel_index}
+        deselect_n, //!< {n, index_0, ..., index_n} --{sel_index_0, ..., sel_index_n}
+        toggle_selection, //!< {index} --{u8_bool_selected, sel_index}
+        toggle_selection_n, //!< {n, index_0, ..., index_n} --{bitset_index_was_selected, sel_index_0, ..., sel_index_n}
+        sort_selections, //!< {n, index_0_source_index, ..., index_n_source_index}
+        sort_selections_desc, //!< {n, index_0_source_index, ..., index_n_source_index}
+        set, //!< {value} --{prev_value}
+        set_n, //!< {n, index_0, ..., index_n, value} --{value_0, ..., value_n}
+        set_l, //!< {value} --{value_0, ..., value_n} // Same as set_n, except the selections make up the indexes
+        append, //!< {value}
+        append_n, //!< {n, value_0, ..., value_n}
+        insert, //!< {index, value}
+        insert_n, //!< {n, index, value_0, ..., value_n}
+        remove, //!< {index} --{value, u8_bool_was_selected, sel_index}
+        remove_n, //!< {n, index_0, ..., index_n} --{value_0, ..., value_n, bitset_index_selected, m, sel_index_0, ..., sel_index_m} where index_0 > ... > index_n
+        remove_l, //!< {} --{n, index_0, ..., index_n, value_0, ..., value_n, selections} // Same as remove_n, except the selections make up the indexes
+        sort, //!< {n, index_0_source_index, ..., index_n_source_index}
+        sort_desc, //!< {n, index_0_source_index, ..., index_n_source_index}
+        swap, //!< {index_0, index_1}
+        move_up, //!< {index}
+        move_up_n, //!< {n, index_0, ..., index_n}
+        move_up_l, //!< {} --{selections} // Same as move_up_n, except the selections make up the indexes
+        move_top, //!< {index}
+        move_top_n, //!< {n, index_0, ... index_n} --{selections}
+        move_top_l, //!< {} --{selections} // Same as move_top_n, except the selections make up the indexes
+        move_down, //!< {index}
+        move_down_n, //!< {n, index_0, ... index_n}
+        move_down_l, //!< {} --{selections} // Same as move_down_n, except the selections make up the indexes
+        move_bottom, //!< {index}
+        move_bottom_n, //!< {n, index_0, ... index_n} --{selections}
+        move_bottom_l, //!< {} --{selections} // Same as move_down_n, except the selections make up the indexes
+        move_to, //!< {index, target_index}
+        move_to_n, //!< {n, target_index, index_0, ..., index_n} --{selections}
+        move_to_l //!< {target_index} --{selections} // Same as move_to_n, except the selections make up the indexes
     };
 
     constexpr bool is_sel_change_op(op operation)
@@ -7778,8 +7778,8 @@ namespace nf_hist
             if ( parent != nullptr && --(parent->action_reference_count) == 0 )
                 parent->submit_action();
         }
-        constexpr auto & operator*() noexcept { return parent->mod_root; }
-        constexpr auto operator->() noexcept { return &(parent->mod_root); }
+        constexpr editor & operator*() noexcept { return parent->mod_root; }
+        constexpr editor* operator->() noexcept { return &(parent->mod_root); }
 
         template <class Keys, class ... Pathway>
         auto edit_from_path(path_tagged_keys<Keys, type_tags<Pathway...>, editor<Tracked>> path)
@@ -7793,10 +7793,10 @@ namespace nf_hist
     using after_action_op = decltype(std::declval<Usr>().after_action(std::size_t(0)));
 
     enum class action_status {
-        unknown = 0,
-        undoable = 1,
-        elided_redo = 2,
-        redoable = 3
+        unknown = 0, //!< the status rendered_actions get initialized to, this is expected to be updated by the renderer
+        undoable = 1, //!< an action exists prior to the current action cursor and can be undone
+        elided_redo = 2, //!< an action was redoable but has since been elided from the main history branch and can no longer be undone/redone
+        redoable = 3 //!< an action exists after the current action cursor and can be redone
     };
 
     struct data_change_event {
