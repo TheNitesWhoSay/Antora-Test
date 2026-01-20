@@ -1,0 +1,24 @@
+[#nf_hist-editor-operator_ptr]
+= xref:nf_hist.adoc[nf&lowbar;hist]::xref:nf_hist/editor.adoc[editor]::operator&hyphen;&gt;
+:relfileprefix: ../../
+:mrdocs:
+
+Member access operator
+
+== Synopsis
+
+Declared in `&lt;nf&sol;hist&period;h&gt;`
+
+[source,cpp,subs="verbatim,replacements,macros,-callouts"]
+----
+constexpr
+xref:nf_hist/editor.adoc[editor]*
+operator&hyphen;&gt;() noexcept;
+----
+
+== Return Value
+
+Pointer to the current object
+
+
+[.small]#Created with https://www.mrdocs.com[MrDocs]#

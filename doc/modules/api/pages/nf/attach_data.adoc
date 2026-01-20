@@ -1,0 +1,23 @@
+[#nf-attach_data]
+= xref:nf.adoc[nf]::attach&lowbar;data
+:relfileprefix: ../
+:mrdocs:
+
+== Synopsis
+
+Declared in `&lt;nf&sol;hist&period;h&gt;`
+
+[source,cpp,subs="verbatim,replacements,macros,-callouts"]
+----
+using nf&lowbar;hist::attach&lowbar;data;
+----
+
+== Introduced Symbols
+
+[cols=1]
+|===
+| Name
+| xref:nf_hist/attach_data.adoc[nf&lowbar;hist::attach&lowbar;data]
+|===
+
+[.small]#Created with https://www.mrdocs.com[MrDocs]#

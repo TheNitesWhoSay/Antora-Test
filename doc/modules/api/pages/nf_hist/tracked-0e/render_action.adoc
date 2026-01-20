@@ -1,0 +1,20 @@
+[#nf_hist-tracked-0e-render_action]
+= xref:nf_hist.adoc[nf&lowbar;hist]::xref:nf_hist/tracked-0e.adoc[tracked]::render&lowbar;action
+:relfileprefix: ../../
+:mrdocs:
+
+== Synopsis
+
+Declared in `&lt;nf&sol;hist&period;h&gt;`
+
+[source,cpp,subs="verbatim,replacements,macros,-callouts"]
+----
+void
+render&lowbar;action(
+    std::size&lowbar;t action&lowbar;index,
+    xref:nf_hist/rendered_action.adoc[rendered&lowbar;action&lt;User&lowbar;data&gt;]& action,
+    bool include&lowbar;events = false) const;
+----
+
+
+[.small]#Created with https://www.mrdocs.com[MrDocs]#

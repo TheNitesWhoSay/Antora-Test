@@ -1,0 +1,23 @@
+[#nf-make_path]
+= xref:nf.adoc[nf]::make&lowbar;path
+:relfileprefix: ../
+:mrdocs:
+
+== Synopsis
+
+Declared in `&lt;nf&sol;hist&period;h&gt;`
+
+[source,cpp,subs="verbatim,replacements,macros,-callouts"]
+----
+using nf&lowbar;hist::make&lowbar;path;
+----
+
+== Introduced Symbols
+
+[cols=1]
+|===
+| Name
+| xref:nf_hist/make_path.adoc[nf&lowbar;hist::make&lowbar;path]
+|===
+
+[.small]#Created with https://www.mrdocs.com[MrDocs]#

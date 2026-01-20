@@ -1,0 +1,33 @@
+[#nf_hist-tracked-0d]
+= xref:nf_hist.adoc[nf&lowbar;hist]::tracked
+:relfileprefix: ../
+:mrdocs:
+
+== Synopsis
+
+Declared in `&lt;nf&sol;hist&period;h&gt;`
+
+[source,cpp,subs="verbatim,replacements,macros,-callouts"]
+----
+template&lt;
+    class Data,
+    class User,
+    class User&lowbar;data = no&lowbar;user&lowbar;data&gt;
+requires RareTs&colon;&colon;is&lowbar;macro&lowbar;reflected&lowbar;v&lt;Data&gt; &amp;&amp; std&colon;&colon;is&lowbar;object&lowbar;v&lt;User&gt;
+class tracked;
+----
+
+== Derived Classes
+
+[cols=2]
+|===
+| Name
+| Description
+| xref:nf_hist/simple_tracked-026.adoc[`simple&lowbar;tracked`]
+| 
+| xref:nf_hist/simple_tracked-02b.adoc[`simple&lowbar;tracked`]
+| 
+|===
+
+
+[.small]#Created with https://www.mrdocs.com[MrDocs]#

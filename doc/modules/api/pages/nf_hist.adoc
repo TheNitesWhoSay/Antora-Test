@@ -1,0 +1,47 @@
+[#nf_hist]
+= nf&lowbar;hist
+:relfileprefix: 
+:mrdocs:
+
+== Types
+
+[cols=1]
+|===
+| Name
+| xref:nf_hist/editor.adoc[`editor`] 
+| xref:nf_hist/rendered_action.adoc[`rendered&lowbar;action`] 
+| xref:nf_hist/simple_tracked-026.adoc[`simple&lowbar;tracked`] 
+| xref:nf_hist/simple_tracked-02b.adoc[`simple&lowbar;tracked`] 
+| xref:nf_hist/tracked-0e.adoc[`tracked`] 
+| xref:nf_hist/tracked-0d.adoc[`tracked`] 
+| xref:nf_hist/tracked_element.adoc[`tracked&lowbar;element`] 
+| xref:nf_hist/make_path.adoc[`make&lowbar;path`] 
+|===
+
+== Enums
+
+[cols=1]
+|===
+| Name
+| xref:nf_hist/action_status.adoc[`action&lowbar;status`] 
+|===
+
+== Functions
+
+[cols=1]
+|===
+| Name
+| xref:nf_hist/make_tracked.adoc[`make&lowbar;tracked`] 
+|===
+
+== Variables
+
+[cols=1]
+|===
+| Name
+| xref:nf_hist/attach_data.adoc[`attach&lowbar;data`] 
+| xref:nf_hist/index_size.adoc[`index&lowbar;size`] 
+|===
+
+
+[.small]#Created with https://www.mrdocs.com[MrDocs]#

@@ -1,0 +1,23 @@
+[#nf-tracked]
+= xref:nf.adoc[nf]::tracked
+:relfileprefix: ../
+:mrdocs:
+
+== Synopsis
+
+Declared in `&lt;nf&sol;hist&period;h&gt;`
+
+[source,cpp,subs="verbatim,replacements,macros,-callouts"]
+----
+using nf&lowbar;hist::tracked;
+----
+
+== Introduced Symbols
+
+[cols=1]
+|===
+| Name
+| xref:nf_hist/tracked-0d.adoc[nf&lowbar;hist::tracked]
+|===
+
+[.small]#Created with https://www.mrdocs.com[MrDocs]#
