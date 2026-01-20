@@ -339,7 +339,8 @@ namespace nf_hist
         }
     };
 
-    struct uint6_t // A 6-bit unsigned int [0, 64); as the high bits are available can be combined with path bits
+    /// A 6-bit unsigned int [0, 64); as the high bits are available can be combined with path bits
+    struct uint6_t
     {
         std::uint8_t value = 0;
         
@@ -408,8 +409,11 @@ namespace nf_hist
         }
     }
 
+    /// Sorts the items via quick-sort and returns a vector of source indexes that can be used to undo the action
+    /// @param items the items to sort
+    /// @return a vector of source indexes
     template <bool Desc = false, typename I = std::size_t, typename T>
-    [[nodiscard]] std::vector<I> tracked_sort(T & items) // sort items, return vector of source indexes
+    [[nodiscard]] std::vector<I> tracked_sort(T & items)
     {
         if ( std::size(items) == 0 )
             return std::vector<I> {};
@@ -462,8 +466,9 @@ namespace nf_hist
         }
     }
 
+    /// (aka: route) this combines the path to a particular (sub/)member and any map keys/array indexes
     template <class Keys, class Pathway, class Editor_type>
-    struct path_tagged_keys : Keys // (aka: route) this combines the path to a particular (sub/)member and any map keys/array indexes
+    struct path_tagged_keys : Keys
     {
         using pathway = Pathway;
         using keys = Keys;
@@ -556,16 +561,16 @@ namespace nf_hist
         }
     }
 
+    
+    // The meaning of the lower 6-bits depends on the selection bit (second highest bit)...
+    //  branch: identifies a field or array index (for array sizes <= 64) which you'll be branching from
+    //      if array/container requires an index larger than 6 bits, then the next sizeof(containerIndex) bytes are the container index
+    //  sel_branch: lower 6-bits unused, sel_branch indicates the operation applies over the selection for this container (may branch further down from here)
+    //  leaf_branch: same as branch except this also indicates it's the last branch in the sequence
+    //  leaf_branch: same as branch except this also indicates it's the last branch in the sequence
+    //  leaf_sel_branch: same as sel_branch except this also indicates it's the last branch in the sequence
+    //      special case: if this is the first element, it means use the root element */
     enum class path_op : std::uint8_t {
-        
-        // The meaning of the lower 6-bits depends on the selection bit (second highest bit)...
-        //   branch: identifies a field or array index (for array sizes <= 64) which you'll be branching from
-        //           if array/container requires an index larger than 6 bits, then the next sizeof(containerIndex) bytes are the container index
-        //   sel_branch: lower 6-bits unused, sel_branch indicates the operation applies over the selection for this container (may branch further down from here)
-        //   leaf_branch: same as branch except this also indicates it's the last branch in the sequence
-        //   leaf_branch: same as branch except this also indicates it's the last branch in the sequence
-        //   leaf_sel_branch: same as sel_branch except this also indicates it's the last branch in the sequence
-        //                    special case: if this is the first element, it means use the root element
         high_bits       = 0b11000000, //!< the two highest bits of the path_op byte, identifies the type of branch
         low_bits        = 0b00111111, //!< the six lowest bits of the path_op byte, an index or other data associated with the given branch type
 
@@ -640,7 +645,7 @@ namespace nf_hist
         }
     }
 
-    // Go to the Ith member of the current object
+    /// Go to the Ith member of the current object
     template <std::size_t I> struct path_member {
         static constexpr std::size_t index = I;
     };
@@ -648,7 +653,7 @@ namespace nf_hist
     template <std::size_t I> struct is_path_member<path_member<I>> { static constexpr bool value = true; };
     template <class T> inline constexpr bool is_path_member_v = is_path_member<T>::value;
 
-    // Use the Ith tuple-index to perform an array access on the current object
+    /// Use the Ith tuple-index to perform an array access on the current object
     template <std::size_t I> struct path_index {
         static constexpr std::size_t index = I;
     };
@@ -656,7 +661,8 @@ namespace nf_hist
     template <std::size_t I> struct is_path_index<path_index<I>> { static constexpr bool value = true; };
     template <class T> inline constexpr bool is_path_index_v = is_path_index<T>::value;
 
-    struct path_selections {}; // The subsequent operation applies to all selected objects in the collection
+    /// The subsequent operation applies to all selected objects in the collection
+    struct path_selections {};
     template <class T> struct is_path_selections { static constexpr bool value = false; };
     template <> struct is_path_selections<path_selections> { static constexpr bool value = true; };
     template <class T> inline constexpr bool is_path_selections_v = is_path_selections<T>::value;
@@ -767,8 +773,10 @@ namespace nf_hist
             return RareTs::static_array_size_v<T>;
     }
 
+    /// Needed specifically when an equivalent 1d index type needs to be determined for an md array
+    /// @return a 1d index type appropriate to index all slots in a multi-dimensional array
     template <class Member>
-    inline constexpr auto collapsed_index_typer() // Needed specifically when an equivilant 1d index type needs to be determined for an md array
+    inline constexpr auto collapsed_index_typer()
     {
         static_assert(!std::is_void_v<Member>, "Collapsed index typer requires a non-void member");
         static_assert(RareTs::is_static_array_v<typename Member::type>, "Collapsed index typer requires a static array");
@@ -911,7 +919,9 @@ namespace nf_hist
                     agent.user.selections_changed(route{(Keys &)(*this)});
             }
 
-            inline void select(index_type i) // i must not be selected
+            /// Selects the given index
+            /// @param i the index to be selected (must not be selected before calling select)
+            inline void select(index_type i)
             {
                 auto & sel = agent.template get_selections<Pathway...>();
                 agent.event_offsets.push_back(agent.events.size());
@@ -928,7 +938,9 @@ namespace nf_hist
                     agent.user.selections_changed(route{(Keys &)(*this)});
             }
 
-            inline void select(const std::vector<index_type> & added_selections) // added_selections must not be selected
+            /// Selects the given indexes
+            /// @param added_selections the indexes to be selected (must not be selected before calling select)
+            inline void select(const std::vector<index_type> & added_selections)
             {
                 auto & sel = agent.template get_selections<Pathway...>();
                 agent.event_offsets.push_back(agent.events.size());
@@ -951,7 +963,9 @@ namespace nf_hist
                     agent.user.selections_changed(route{(Keys &)(*this)});
             }
 
-            inline void deselect(index_type i) // i must be selected
+            /// Deselects the given index
+            /// @param i the index to deselect (this index must be selected before calling deselect)
+            inline void deselect(index_type i)
             {
                 auto & sel = agent.template get_selections<Pathway...>();
                 agent.event_offsets.push_back(agent.events.size());
@@ -972,7 +986,9 @@ namespace nf_hist
                     agent.user.selections_changed(route{(Keys &)(*this)});
             }
 
-            inline void deselect(const std::vector<index_type> & removed_selections) // removed_selections must be selected
+            /// Deselects the given indexes
+            /// @param removed_selections the indexes to deselect (these indexes must be selected before calling deselect)
+            inline void deselect(const std::vector<index_type> & removed_selections)
             {
                 auto & sel = agent.template get_selections<Pathway...>();
                 agent.event_offsets.push_back(agent.events.size());
@@ -1455,7 +1471,7 @@ namespace nf_hist
         using editor_type = Editor_type;
         using default_index_type = typename decltype(def_index_type<T>())::type;
         decltype(nf_hist::selections<default_index_type, T>()) selections {};
-        std::vector<std::uint8_t> events {std::uint8_t(0)}; // First byte is unused
+        std::vector<std::uint8_t> events {std::uint8_t(0)}; /// First byte is unused
         std::vector<std::uint64_t> event_offsets {};
         T & t;
         User & user;
@@ -1467,7 +1483,10 @@ namespace nf_hist
             events = {std::uint8_t(0)};
         }
 
-        std::size_t trim(std::size_t new_first_event) // Returns the count of trimmed events
+        /// Trims events such that the event currently at new_first_event becomes event at the 0th event offset
+        /// @param new_first_event the event you wish to come first after the trim
+        /// @return the count of trimmed events
+        std::size_t trim(std::size_t new_first_event)
         {
             if ( new_first_event >= event_offsets.size() )
             {
@@ -1815,7 +1834,10 @@ namespace nf_hist
                 static_assert(std::is_void_v<Path_element>, "Unexpected path element type!");
         }
         
-        // When operating through selections, a modified keys tuple must be built and passed to f
+        /// When operating through selections, a modified keys tuple must be built and passed to f
+        /// @param t the root object you will be operating on
+        /// @param keys the keys/array-indexes in the route being operated on
+        /// @param f the lambda to call with a reference to the data being operated on (together with the route and other type info)
         template <class ... Pathway, class Keys, class U, class F>
         void operate_thru_sel(U & t, Keys & keys, F f)
         {
@@ -1954,8 +1976,10 @@ namespace nf_hist
             selections.template init_attached_data<>(data_sizer);
         }
         
+        /// Creates an init event saving the existing data, does not make data change or send notifications
+        /// @param keys the keys/array indexes of the path to the data being initialized
         template <class ... Pathway, class Keys>
-        void record_initialization(Keys & keys) // Creates an init event saving the existing data, does not make data change or send notifications
+        void record_initialization(Keys & keys)
         {
             event_offsets.push_back(events.size());
             events.push_back(uint8_t(op::init));
@@ -4070,8 +4094,11 @@ namespace nf_hist
             return value;
         }
 
+        /// Same as read_value except this doesn't modify the offset
+        /// @param offset the offset at which to peek a value
+        /// @return the value being peeked at offset
         template <class Value, class Member>
-        auto peek_value(std::size_t offset) const // read_value but doesn't change offset
+        auto peek_value(std::size_t offset) const
         {
             if constexpr ( std::is_array_v<Value> ) // Avoid trying to return array[] types, make a vector
             {
@@ -7891,11 +7918,13 @@ namespace nf_hist
 
     public:
 
-        const mod_root_type & view; // Used to view selections data (and potentially other info associated with particular data paths)
+        /// Used to view selections data (and potentially other info associated with particular data paths)
+        const mod_root_type & view;
         tracked(User* user) : mod_root(this->data, *user), view(mod_root) {}
         tracked(User & user) : mod_root(this->data, user), view(mod_root) {}
 
-        const Data & read = data; // A read only version of the user data
+        /// A read only version of the user data
+        const Data & read = data;
         constexpr const Data & operator*() const noexcept { return read; }
         constexpr const Data* operator->() const noexcept { return &this->data; }
 
@@ -7911,7 +7940,8 @@ namespace nf_hist
             constexpr mod_root_type & operator*() noexcept;
             constexpr mod_root_type* operator->() noexcept;
         };
-        static inline pather root {}; // Represents the root of the data structure, used by client code to create paths
+        /// Represents the root of the data structure, used by client code to create paths
+        static inline pather root {};
 
     public:
 
@@ -7944,7 +7974,10 @@ namespace nf_hist
             actions.clear();
         }
 
-        std::size_t trim_history(std::size_t new_first_action) // Trims history so it starts at new_first_action, returns corrected new_first_action
+        /// Trims history so it starts at new_first_action; if new_first_action is elided the trim starts at the next unelided action
+        /// @param new_first_action the action you want to come first in the history after trimming
+        /// @return new_first_action if new_first_action was not elided, the first unelided action after that otherwise, zero if history is or becomes empty
+        std::size_t trim_history(std::size_t new_first_action)
         {
             if ( action_reference_count != 0 || redo_count > 0 )
                 throw std::logic_error("Cannot trim history while an action is active or redos are present");
@@ -7967,13 +8000,13 @@ namespace nf_hist
                 }
                 else if ( i > static_cast<std::ptrdiff_t>(new_first_action) ) // Non-elided, haven't yet reached new_first_action
                     --i; // Keep moving towards new_first_action
-                else // Reached or passed newFirstAction
+                else // Reached or passed new_first_action
                 {
                     if ( i <= 0 )
-                        return 0; // Nothing to clear before the given "newFirstAction" that wasn't elided
+                        return 0; // Nothing to clear before the given "new_first_action" that wasn't elided
                     else
                     {
-                        new_first_action = static_cast<std::size_t>(i); // Fix newFirstAction to the last action that wasn't elided
+                        new_first_action = static_cast<std::size_t>(i); // Fix new_first_action to the last action that wasn't elided
                         break;
                     }
                 }
@@ -7992,7 +8025,10 @@ namespace nf_hist
             return new_first_action;
         }
 
-        std::uint64_t trim_history_to_size(std::uint64_t max_size) // Returns the new size
+        /// Trims the history such that size is less than or equal to max_size
+        /// @param max_size the maximum size for the history to have after trimming (actions must be kept whole so the new byte count will likely be less)
+        /// @return the new size
+        std::uint64_t trim_history_to_size(std::uint64_t max_size)
         {
             if ( action_reference_count != 0 || redo_count > 0 )
                 throw std::logic_error("Cannot trim history while an action is active or redos are present");
@@ -8071,8 +8107,9 @@ namespace nf_hist
             return total_size;
         }
 
-        // Initializes the stored data with the given input, this initialization is tracked of initTracked is true
-        // If there's an active action or any stored actions a logic_error will be thrown
+        /// Initializes the stored data with the given input, this initialization is tracked of initTracked is true
+        /// If there's an active action or any stored actions a logic_error will be thrown
+        /// @param data The value to initialize the stored data to
         template <bool Init_tracked = false>
         void init_data(auto && data)
         {
@@ -8106,7 +8143,8 @@ namespace nf_hist
             }
         }
 
-        void record_init() // Creates an action recording the initialization of an object which has already occured
+        /// Creates an action recording the initialization of an object which has already occurred
+        void record_init()
         {
             if ( !actions.empty() )
                 throw std::logic_error("Cannot record initialization of an object that already has history!");
@@ -8198,22 +8236,30 @@ namespace nf_hist
             return action_index;
         }
 
-        std::size_t total_actions() // Includes undoable, redoable, elided, and pending actions
+        /// Includes undoable, redoable, elided, and pending actions
+        /// @return The total count of actions, including undoable, redoable, elided, and pending actions
+        std::size_t total_actions()
         {
             return actions.size();
         }
 
-        std::size_t get_pending_action_index() // The index the current action will be if it's submitted
+        /// The index the current action will have if it's submitted
+        /// @return Index the current action will have if it's submitted
+        std::size_t get_pending_action_index()
         {
             return redo_count > 0 ? actions.size()+1 : actions.size();
         }
 
-        std::size_t get_cursor_index() // One after the index of the last action which hasn't been undone
+        /// One after the index of the last action which hasn't been undone
+        /// @return Index one after the last action which hasn't been undone
+        std::size_t get_cursor_index()
         {
             return actions.size()-redo_size;
         }
 
-        std::size_t previous_cursor_index() // One after the index of the most recent un-elided action before the current cursor
+        /// One after the index of the most recent un-elided action before the current cursor
+        /// @return Index one after the most recent un-elided action before the current cursor
+        std::size_t previous_cursor_index()
         {
             for ( auto i = static_cast<std::ptrdiff_t>(get_cursor_index())-2; i>=0; --i )
             {
