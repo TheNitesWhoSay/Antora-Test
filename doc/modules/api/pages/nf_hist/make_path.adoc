@@ -10,7 +10,7 @@ Declared in `&lt;nf&sol;hist&period;h&gt;`
 [source,cpp,subs="verbatim,replacements,macros,-callouts"]
 ----
 template&lt;class Input&gt;
-using make&lowbar;path = path&lowbar;tagged&lowbar;keys&lt;Input::keys, Input::path, Input::editor&lowbar;type&gt;;
+using make&lowbar;path = path&lowbar;tagged&lowbar;keys&lt;Input::nf&lowbar;keys, Input::nf&lowbar;path, Input::nf&lowbar;editor&lowbar;type&gt;;
 ----
 
 
