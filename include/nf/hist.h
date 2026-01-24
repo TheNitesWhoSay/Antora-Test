@@ -7805,8 +7805,8 @@ namespace nf_hist
             if ( parent != nullptr && --(parent->action_reference_count) == 0 )
                 parent->submit_action();
         }
-        constexpr editor & operator*() noexcept { return parent->mod_root; }
-        constexpr editor* operator->() noexcept { return &(parent->mod_root); }
+        constexpr typename Tracked::mod_root_type & operator*() noexcept { return parent->mod_root; }
+        constexpr typename Tracked::mod_root_type* operator->() noexcept { return &(parent->mod_root); }
 
         template <class Keys, class ... Pathway>
         auto edit_from_path(path_tagged_keys<Keys, type_tags<Pathway...>, editor<Tracked>> path)

@@ -26,9 +26,9 @@ class editor;
 | xref:nf_hist/editor/edit_from_path.adoc[`edit&lowbar;from&lowbar;path`] 
 | 
 | xref:nf_hist/editor/operator_star.adoc[`operator&ast;`] 
-| Dereference operator
+| 
 | xref:nf_hist/editor/operator_ptr.adoc[`operator&hyphen;&gt;`] 
-| Member access operator
+| 
 |===
 
 

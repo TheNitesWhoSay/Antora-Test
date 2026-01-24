@@ -98,14 +98,14 @@
     <arglist>(path_tagged_keys&lt;Keys, type_tags&lt;Pathway...&gt;, editor&lt;Tracked&gt;&gt; path)</arglist>
   </member>
   <member kind="function">
-    <type>editor&amp;</type>
+    <type>Tracked::mod_root_type&amp;</type>
     <name>operator*</name>
     <anchorfile>nf_hist/editor/operator_star.adoc</anchorfile>
     <anchor/>
     <arglist>()</arglist>
   </member>
   <member kind="function">
-    <type>editor*</type>
+    <type>Tracked::mod_root_type*</type>
     <name>operator-&gt;</name>
     <anchorfile>nf_hist/editor/operator_ptr.adoc</anchorfile>
     <anchor/>

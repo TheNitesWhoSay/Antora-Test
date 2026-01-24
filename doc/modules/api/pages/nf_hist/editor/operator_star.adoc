@@ -3,8 +3,6 @@
 :relfileprefix: ../../
 :mrdocs:
 
-Dereference operator
-
 == Synopsis
 
 Declared in `&lt;nf&sol;hist&period;h&gt;`
@@ -12,13 +10,9 @@ Declared in `&lt;nf&sol;hist&period;h&gt;`
 [source,cpp,subs="verbatim,replacements,macros,-callouts"]
 ----
 constexpr
-xref:nf_hist/editor.adoc[editor]&
+Tracked::mod&lowbar;root&lowbar;type&
 operator&ast;() noexcept;
 ----
-
-== Return Value
-
-Reference to the current object
 
 
 [.small]#Created with https://www.mrdocs.com[MrDocs]#
