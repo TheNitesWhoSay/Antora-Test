@@ -1,6 +1,6 @@
 site:
-  title: Docs Site
-  start_page: project-name::index.adoc
+  title: Nf Hist
+  start_page: nf-hist::index.adoc
 content:
   sources:
   - url: ../

@@ -1,6 +1,6 @@
-name: project-name
+name: nf-hist
 version: ~
-title: Project Name
+title: Nf Hist
 nav:
 - modules/ROOT/nav.adoc
 - modules/api/nav.adoc
