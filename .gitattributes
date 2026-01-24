@@ -1,2 +1,1 @@
-*.adoc binary
-*reference.tag.xml binary
+*doc/modules/api/pages text eol=lf
