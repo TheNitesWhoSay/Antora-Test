@@ -1,0 +1,14 @@
+= Action User Data
+- Getting a descriptor or other data on your actions
+
+If you wish to display the undo-redo history in your application you'll note that rendered events are all technical descriptions of data changes. Perhaps this is fine for some audiences but most applications will want a user-friendly description for actions.
+
+For this purpose you can add some (opt-in) user-data to your types using the third template argument to nf::tracked e.g.
+
+[[Example]]
+
+Now when you render actions, you'll get back that user data and you can use it to provide user-friendly descriptions e.g.
+
+[[Example]]
+
+Action user data can be used for other things as well, such as storing the timestamp when an action was submitted, or whatever else your application might need - keeping this data minimal is advisable (e.g. if you can get by with a descriptor enum and an epoch, don't generate strings at this point), as this keeps the hist size down as well as overhead for creating actions minimal.

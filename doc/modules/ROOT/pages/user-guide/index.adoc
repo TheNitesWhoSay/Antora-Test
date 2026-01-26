@@ -7,4 +7,5 @@
 5. xref:user-guide/5-notifications.adoc[]
 6. xref:user-guide/6-selections.adoc[]
 7. xref:user-guide/7-attached-data.adoc[]
-8. xref:user-guide/8-manual-optimizations.adoc[]
+8. xref:user-guide/8-action-user-data.adoc[]
+9. xref:user-guide/9-manual-optimizations.adoc[]

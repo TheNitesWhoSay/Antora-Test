@@ -1,1 +1,47 @@
 = Tracked Types
+- Define a source data class, create a tracked class, initialization & reading from a tracked class
+
+1.) Creating your source data class
+
+
+
+The first step to using hist is creating your data class (note that this documentation may use "class" and "struct" interchangably). At present hist supports:
+- Fundamental types https://en.cppreference.com/w/cpp/language/types.html (e.g. int, float, char, std::uint8_t)
+- C arrays
+- std::array's
+- std::vector's
+- std::optional's
+- std::string's *
+- Types which support both operator= and serialization/deserialization via reinterpret_cast to bytes **
+- Any struct or class containing the above
+
+* Note that std::string along with other containers could be greatly improved by recieving their own set of specialized ops like std::vector has, and may not at this time be appropriate for large, heavily mutated strings (e.g. a notepad application)
+** Future support for hist and serialization customization could improve this
+
+2.) Reflect!
+
+Unless you're living in the post-C++26 future - you need to include reflect.h and use a reflection macro (note that macroless reflection is insufficent, due to the need for adaptive structures https://github.com/TheNitesWhoSay/RareCpp/wiki/2.4.-Reflection:-Adaptive-Structures ) - this is easiest to write inside the class as below, but you may also reflect from outside the class - see https://github.com/TheNitesWhoSay/RareCpp/wiki/2.1.-Reflection:-REFLECT-Macro#reflect-from-outside-class-bodies .
+
+3.) Create your tracked class
+
+You can use nf::simple_tracked, if your use case is trivially simple, e.g.
+
+[TODO: Example here]
+
+Most cases you'll want to create your own tracked class by extending nf::tracked; you need to provide your source data class and your tracked class as template arguments, and you need a constructor initializing "tracked" with "this". e.g.
+
+[TODO: Example here]
+
+4.) Initialize your data
+
+You have a few options here...
+a.) You can do "nothing" (at least from this hist side of things) and lean on whatever inline initializers or constructors your source data has for initialization.
+b.) You can perform an "untracked" initialization - you supply an instance of your source data struct to be moved into the tracked storage; no history will be generated for the initialization event
+c.) You can perform a "tracked" initialization - you supply and instance of your source data struct to be moved into the tracked storage, and this will be recorded as the first action in hist (note: you don't need this for all cases, e.g. undo-redos will be fine without it, but it's recommended for others, e.g. making reliable replays)
+Note: initData can only be called when history is empty, you can use .clearHistory or you can replace your entire object without clearing history using tracked()->assign(..)
+
+5.) Try reading from your data!
+
+[Example, first leaning on tracked->myField, but also showing *(tracked).myField, tracked.read.myField]
+
+You *can* edit your data with the tracked()-> syntax, such that -> is reading and ()-> is modifying, but for reasons we'll get into in the next section, [creating an explicit action](TODO: link to next section] is usually preferrable.

@@ -1,1 +1,29 @@
 = Introduction
+
+- Motivating examples, use-cases, design goals/achievements
+
+[Hist library]
+Provides robust, low-overhead, automated data-change tracking.
+
+Your Data Struct -> [Reflection Magic] -> Tracked Data Struct
+
+[Example simple_tracked<Foo>]
+
+Primary use cases:
+    1.) Track data changes without writing explicit tracking code
+    2.) Enable undo-redo (and in future versions, time-travelling to previous states)
+    3.) Have access to simple, opt-in listener methods for data changes
+    4.) Enable replaying data changes from the start or from a previous state
+    5.) Render data changes (e.g. for auditing or history UIs)
+    6.) Facilitate programmatic traversal of data changes
+    
+Future version use cases:
+    7.) Automatically stream history to file from a separate thread
+    8.) Facilitate data-recovery after crashes
+    9.) Enable data-change scripting
+    10.) Stream/synchronize data changes (note: spec needs user-specific selections)
+
+Technical features:
+    - Minimal Data Usage: Only the minimum data required to remember the change & enable fast undo-redos is used, not the whole state of the object/sub-objects.
+    - High Performance: Minimal allocations (individual ops don't depend on allocations), no polymorphism or type erasure (strong types end-to-end via metaprogramming), copies & stack usage is minimized, unused features & checks excluded at compile time; many specialized ops
+    - User & auto-complete friendly code: Reflection is used to create the tracked data structure in such a way that the user can use auto-complete and write code to edit their data structures the ~same as though it were their source structure

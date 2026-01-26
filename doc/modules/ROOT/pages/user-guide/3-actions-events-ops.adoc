@@ -1,1 +1,22 @@
 = Actions, Events & Operations
+- Action methods (preferred), standalone actions, persistent actions, tracked elements, ops & op-methods, operator overloads
+
+Some quick terminology...
+    - A "Command"/"Intent": can broadly be thought of as a request for action - the hist library does not concern itself with commands (or intents) at this time, rather, hist is a record of actions.
+    - An "Action": represents some action your program is taking. Actions can range from a high-level API call with thousands of branches and data changes, or could be as simple as incrementing an int. An action consists of zero or more data-change events. Generating a single action is the ideal response to a single user/client command.
+    - A "Data-Change Event" (or just "Event"): is a change to a particular field or sub-field in your tracked object. Events consist of a "Path" to the field/sub-field that changed, and an operation ("op") that occurs on that field/sub-field.
+    - An "Op"/"Operation": an op is a specific transformation performed on an object/field/sub-field, e.g. if you go ``tracked.my_int = 5;``, that's an assignment op, ``tracked.my_int_vec.append(12)`` - that's an append op, each op has a spec for how it can be recorded as binary data in hist.
+
+The preferred way to edit tracked data is with "Action Methods" - just add a method to your class, put the line ``auto edit = create_action();`` somewhere in your method, and change your data using edit.
+
+[[Example]]
+
+As mentioned, things like [TODO: things from above example] are ops, see, [[TODO: ops page link]] for a full list of ops.
+
+You can create actions outside of your tracked class, but be a little cautious: actions are submitted when they go out of scope, and *usually* you want actions submitted ASAP.
+
+[[Example]]
+
+Persisent actions are sometimes required, for instance, in a paint program you might select a brush and then click and hold - move around for a bit - then release, and you want the entire brush sequence to be stored as one undoable action. These are more complicated... I recommend creating something like std::optional<nf::editor<nf::tracked>> brush; creating your brush action with ``brush.emplace(std::move(create_action()))``, then destroying it with ``brush = std::nullopt`` on mouse-up or other aborting actions (e.g. window closed, window destructor running, window loses focus, new brush action about to begin; and in all of these, if you might hit an exception before destroying the brush, consider a scoped destructor [TODO: link a godbolt, do not show scoped destructor code here])
+
+[[Minimized Persistent Actions Example]]

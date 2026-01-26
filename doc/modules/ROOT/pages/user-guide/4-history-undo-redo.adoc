@@ -1,1 +1,19 @@
 = History & Undo-Redo
+When you call an op, the "do" code for the op runs, actual data changes and event creation (and selection updates, notifications, and attachment updates if applicable) all occur before the op returns. Event creation includes serializing the "path" to the field/sub-field/sub-element being edited and serializing the op/data-change into memory. When the action goes out of scope it is submitted and is only then available for undo-redos and rendering.
+
+[[ Example,
+    <- first op/event done/data at this point
+    <- second op/event done/data at this point
+    <- action submission point ]]
+
+Calling undo_action finds the next action to be undone, and goes through the data-change events in reverse order - invoking the "undo" code for the given op in each event on the data given by said events "path".
+
+[[ Example ]]
+
+When you undo an action, that action becomes available for redo. Calling redo action finds the next action to be redone, and goes through the data-change events in forward order - invoking the "redo" code for the given op on the data given by said events "path".
+
+[[ Example ]]
+
+When you undo an action, then perform a new action without exausting all your redos, your redos are "elided" - they still exist as part of your history - but they're no longer available via individual calls to undo or redo. A replay/data-recovery operation does not necessarily require visiting elided redos, though an active stream of change history should visit & include all of these.
+
+[[ Example ]]

@@ -1,0 +1,16 @@
+= Manual Optimizations
+- index_size
+
+The best optimization you can do both for size and runtime is to use the more representative op - e.g. setting a container to an entirely new set of values with operator= should be a last resort - as hist has to record the entire state before and state after, when you could use one of the moves, inserts, or sorts.
+
+With use of rendering you can estimate the size hist is taking up as well as the size of particular actions and events.
+
+[[ Example ]]
+
+You can make use of the after_action notification to trim the hist size down to a certain size limit when it exceeds some reasonable limit for your application.
+
+[[ Example ]]
+
+Another optimization you can do - aside from of course directly reducing your structure sizes or the amount of tracked fields/data - is compress the index sizes used by collections. As indexes are used ubiquitously for container ops and hist assumes size_t (usually 8-byte indexes), selecting a smaller index size for your containers can make a huge difference. You can do so using the index_size annotation.
+
+[[ Example - using the index_size annotation as well as an example of how much size it shaved off ]]

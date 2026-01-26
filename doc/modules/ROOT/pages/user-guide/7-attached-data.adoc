@@ -1,1 +1,10 @@
 = Attached Data
+- Attachment concept, auto-sync, compile-time opt-in, initializing/updating/reading attachments
+
+Sometimes in an editor there is data you want to track (e.g. sprite type & position), and data you do not (e.g. sprite animation frame & textures). If this data is strongly related but you want to maintain a strict layer of separation you might want a parallel array. This would be cumbersome, expensive, and prohibitively difficult to accomplish with notifications alone, so this is where attachments come in.
+
+"Attaching" a type to a container in a tracked type tells hist to maintain a parallel array of that type to that container - e.g. for every unit in a game map I want an "actor".
+
+[[ Example ]] 
+
+The parallel array is automatically kept in sync as elements are added/moved/removed. The code keeping this in sync is, similar to notifications, pay-for-what-you-use and only included at compile time if attachments are present.

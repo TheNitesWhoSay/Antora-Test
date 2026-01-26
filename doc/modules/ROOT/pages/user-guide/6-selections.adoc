@@ -1,1 +1,27 @@
 = Selections
+- Selections concept, auto-sync, low-cost-space-saver, making/changing/reading selections
+
+A common operation in editors is selecting the elements of a collection and then performing operations on all of them at once - be it copying, editing, moving them all up/down/to top/to bottom, or deleting them; having client code resend selection indexes for every op is not just clunky for the client coder, it leads to those same indexes being recorded repetedly, bloating the history size.
+
+Selection is also itself often an undoable operation in editors and when elements get removed from a vector, not only do the selected elements need to be removed, but selection indices higher than them in ordered containers need to be updated, this is a significant synchronization burden.
+
+For these reasons, hist has first-class support for selections on all arrays (via bitsets) and containers (index vectors). Ops exist for the user to update selections, operate upon selections, and when ops occur that require synchronization activities (e.g. removals, positional insertions, sorts), hist will automatically update selection indices appropriately.
+
+Example of editing a particular field on all selections:
+
+[[Example]]
+
+Various examples of editing/working with selections
+
+Select Singular: [[Example]]
+Select Multiple: [[Example]]
+Deselect Singular: [[Example]]
+Deselect Multiple: [[Example]]
+Toggle Select Singular: [[Example]]
+Toggle Select Multiple: [[Example]]
+ClearSelection
+SortSelections
+SortSelectionsDesc
+
+RemoveSelection
+MoveSelUp/Top/Down/Bottom/To
