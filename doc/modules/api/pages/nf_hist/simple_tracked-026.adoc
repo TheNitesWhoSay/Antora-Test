@@ -20,7 +20,7 @@ struct simple&lowbar;tracked
 | Name
 | Description
 | `xref:nf_hist/tracked-0d.adoc[nf&lowbar;hist::tracked&lt;Data, simple&lowbar;tracked&lt;Data, User&lowbar;data&gt;, User&lowbar;data&gt;]`
-| 
+| The parent class for your tracked type, stores your source data class, provides const ref access to it, and capabilities to make tracked changes to all members&sol;sub&hyphen;elements, as well as the ability to undo&sol;redo, traverse and manage history
 |===
 
 == Member Functions

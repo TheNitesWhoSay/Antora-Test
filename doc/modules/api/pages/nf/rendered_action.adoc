@@ -14,10 +14,12 @@ using nf&lowbar;hist::rendered&lowbar;action;
 
 == Introduced Symbols
 
-[cols=1]
+[cols=2]
 |===
 | Name
+| Description
 | xref:nf_hist/rendered_action.adoc[nf&lowbar;hist::rendered&lowbar;action]
+| A reasonably user&hyphen;friendly rendering of an action
 |===
 
 [.small]#Created with https://www.mrdocs.com[MrDocs]#
