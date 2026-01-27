@@ -1,5 +1,6 @@
 = Tracked Types
-- Define a source data class, create a tracked class, initialization & reading from a tracked class
+
+Objective: define a source data class, create a tracked class, initialize & read from a tracked class.
 
 1.) Creating your source data class
 
