@@ -1,5 +1,6 @@
 = Op Formats
 
+```
 // The first {} is the data required to perform the operation, the --{} is additional data required for fast undos
 reset // {} ("value = {};") --{n, value_0, ..., value_n, m, selections}
 reserve // {new_size}
@@ -44,3 +45,4 @@ move_bottom_l // {} --{selections} // Same as move_down_n, except the selections
 move_to // {index, target_index}
 move_to_n // {n, target_index, index_0, ..., index_n} --{selections}
 move_to_l // {target_index} --{selections} // Same as move_to_n, except the selections make up the indexes
+```

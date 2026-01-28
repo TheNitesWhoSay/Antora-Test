@@ -9,14 +9,20 @@ Some quick terminology...
 
 The preferred way to edit tracked data is with "Action Methods" - just add a method to your class, put the line ``auto edit = create_action();`` somewhere in your method, and change your data using edit.
 
+```
 [[Example]]
+```
 
 As mentioned, things like [TODO: things from above example] are ops, see, [[TODO: ops page link]] for a full list of ops.
 
 You can create actions outside of your tracked class, but be a little cautious: actions are submitted when they go out of scope, and *usually* you want actions submitted ASAP.
 
+```
 [[Example]]
+```
 
-Persisent actions are sometimes required, for instance, in a paint program you might select a brush and then click and hold - move around for a bit - then release, and you want the entire brush sequence to be stored as one undoable action. These are more complicated... I recommend creating something like std::optional<nf::editor<nf::tracked>> brush; creating your brush action with ``brush.emplace(std::move(create_action()))``, then destroying it with ``brush = std::nullopt`` on mouse-up or other aborting actions (e.g. window closed, window destructor running, window loses focus, new brush action about to begin; and in all of these, if you might hit an exception before destroying the brush, consider a scoped destructor [TODO: link a godbolt, do not show scoped destructor code here])
+Persisent actions are sometimes required, for instance, in a paint program you might select a brush and then click and hold - move around for a bit - then release, and you want the entire brush sequence to be stored as one undoable action. These are more complicated... I recommend creating something like ``std::optional<nf::editor<nf::tracked>> brush;`` creating your brush action with ``brush.emplace(std::move(create_action()))``, then destroying it with ``brush = std::nullopt`` on mouse-up or other aborting actions (e.g. window closed, window destructor running, window loses focus, new brush action about to begin; and in all of these, if you might hit an exception before destroying the brush, consider a scoped destructor ``[TODO: link a godbolt, do not show scoped destructor code here]``)
 
+```
 [[Minimized Persistent Actions Example]]
+```

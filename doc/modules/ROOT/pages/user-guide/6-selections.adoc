@@ -9,10 +9,13 @@ For these reasons, hist has first-class support for selections on all arrays (vi
 
 Example of editing a particular field on all selections:
 
+```
 [[Example]]
+```
 
 Various examples of editing/working with selections
 
+```
 Select Singular: [[Example]]
 Select Multiple: [[Example]]
 Deselect Singular: [[Example]]
@@ -25,3 +28,4 @@ SortSelectionsDesc
 
 RemoveSelection
 MoveSelUp/Top/Down/Bottom/To
+```
