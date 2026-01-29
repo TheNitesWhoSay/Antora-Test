@@ -55,7 +55,7 @@ Action[1] contains events [2, 3)
   [ 2, 31,10] 10 81 16 00 00 00 2A 00 00 00  // edit.hitpoints = 22 // 42
 ----
 
-While the data changes happen instantly, actions are only submitted to the change history (become available for browsing/undo/redo) once they go out of scope, you usually want actions submitted ASAP so be a little cautious if you choose to create actions outside of actions methods.
+While the data changes happen instantly, actions are only submitted to the change history (become available for browsing/undo/redo) once all actions have gone out of scope, you usually want actions submitted ASAP so be a little cautious if you choose to create actions outside of actions methods.
 
 == Persistent Actions
 
