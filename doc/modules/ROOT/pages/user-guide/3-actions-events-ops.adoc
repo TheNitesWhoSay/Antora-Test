@@ -93,3 +93,45 @@ image::godbolt_run.svg[Run,link=https://godbolt.org/z/YzsqM8fnx,window=read-late
 The advantage of persistent/brush actions is that a sequence of events, which may have some delay between them, can all be stored as a singular undoable/redoable action.
 
 Note that in this example ``create_action`` was called multiple times but only a single action was created... Whenever one action is already pending (created, but not yet out of scope), further calls to create_action just reference the same pending action.
+
+== Ops
+
+*Primitives* are given the ops ``=, +=, -=, *=, /=, %=, ^=, &=, and |=``.
+
+*Arrays* (not their elements which are primitives) just have ``.reset()`` and xref:user-guide/7-selections.adoc[]
+
+*std::optional* has ``=, and ->``.
+
+*std::vector* is where things get interesting, it has ``operator=`` but the details of what changed would be opaque, and the overhead of storing before and after states for the whole vector would be murder; so a suite of vector-specific operations exist:
+
+* reset()
+* reserve()
+* trim()
+* assign_default(size)
+* assign(size, value)
+* operator=(value)
+* set(indexes, value)
+* append(value), append(values)
+* insert(index, value), insert(index, values)
+* remove(index), remove(indexes)
+* sort()
+* sort_desc()
+* swap(l, r)
+* move_up(index), move_up(indexes)
+* move_top(index), move_top(indexes)
+* move_down(index), move_down(indexes)
+* move_bottom(index), move_bottom(indexes)
+* move_to(from_index, to_index)
+* (additional ops for selections)
+
+== Performance Notes
+
+Keep in mind that hist is serializing data in-memory to remember every op, using hist is _not_ going to be as fast as performing the same operations with no history recorded. It is, however, likely to win in comparison to hand-rolled undo-redo code. This is because hist has the following qualities...
+
+* Actions/events/ops *do _not_ rely on type erasure or polymorphism* (leverages *reflection* and *TMP*).
+* Actions/events are individually *non-allocating* -- underlying vectors only rarely need to expand.
+* Ops each have a binary spec tailored to store the *minimum data necessary* for fast undos & redos.
+* Ops use *efficient algorithms*, e.g. bulk moves use https://en.cppreference.com/w/cpp/algorithm/rotate.html[std::rotate] and not removal/re-insertions.
+* Ops have separate do-redo code, such that do can occur without reading the data it just serialized and can take max advantage of info uniquely available to it (and not to undo-redo) at compile time.
+* Do-code stores what is needed to remember the change, makes the change directly, then returns immediately - additional features like notifications or attachments are strictly *pay-for-what-you-use*.
+* Hist storage is append-only, allowing it to live in hotter caches and be re-streamed in parallel.

@@ -35,7 +35,7 @@ struct Npc : nf::tracked<Npc_data, Npc>
 
 Note: since ``Npc`` is given as a template param to tracked, hist can perform compile-time checks to see whether certain methods like ``element_added`` exist, and if and only if they're present, call them. Additionally because ``this`` is provided to tracked in the constructor, the call is _not_ polymorphic.
 
-Now whenever elements are added to inventory this method will get called, e.g.
+Now whenever elements are added to inventory this method will get called, e.g. image:godbolt_run.svg[Run,link=https://godbolt.org/z/KEbTYh8Mq,window=read-later,align="left"]
 
 [,cpp]
 ----
@@ -44,7 +44,7 @@ npc()->inventory.append(Item{.name = "Bow", .value = 40.0f});
 
 Undoing a removal or redoing an append would result in the same notification method being called.
 
-Setting up a notification just requires that you know the signatures (TODO: Link to signatures below) and that you have some understanding of paths.
+Setting up a notification just requires that have an understanding of paths and notification method signatures.
 
 == Paths, Keys & Routes
 
@@ -75,8 +75,14 @@ An instance of a path (aka "route") _does_ have the keys/index values, so if you
 
 [,cpp]
 ----
-// TODO: Example
+void value_changed(item_value_path path, float old_value, float new_value)
+{
+    auto inventory_index = path.index<0>();
+    std::cout << "inventory[" << inventory_index << "].value changed from "
+        << old_value << " to " << new_value << '\n';
+}
 ----
+image::godbolt_run.svg[Run,link=https://godbolt.org/z/oTM665zbr,window=read-later,align="left"]
 
 == Notification Signatures
 
@@ -92,6 +98,49 @@ void selections_changed(PATH);
 void after_action(std::size_t action_index);
 ----
 
-Unless you modified the index types as in TODO: link, they're going to be of type std::size_t, the values are the type of the actual value changed, and the paths are those you create with NF_PATH.
+Unless you modified the index types (as described in xref:user-guide/10-manual-optimizations.adoc[]), they're going to be of type ``std::size_t``, the values are the type of the actual value changed, and the paths are those you create with NF_PATH.
 
-TODO: usage example for above signatures
+[,cpp]
+----
+void value_changed(NF_PATH(root->hitpoints), int old_hitpoints, int new_hitpoints)
+{
+    std::cout << "Hitpoints changed from " << old_hitpoints << " to " << new_hitpoints << '\n';
+}
+
+using inventory_path = NF_PATH(root->inventory);
+using item_value_path = NF_PATH(root->inventory[0].value);
+
+void value_changed(item_value_path item, float old_value, float new_value)
+{
+    auto item_index = item.index<0>();
+    std::cout << "Item value at inventory index[" << item_index << "] changed from " << old_value << " to " << new_value << '\n';
+}
+
+void element_added(inventory_path, std::size_t index)
+{
+    const auto & item = read.inventory[index];
+    std::cout << "Item added to inventory at index[" << index << "]: " << Json::out(item) << '\n';
+}
+
+void element_removed(inventory_path, std::size_t index)
+{
+    const auto & item = read.inventory[index];
+    std::cout << "Removing item from inventory at index[" << index << "]: " << Json::out(item) << '\n';
+}
+
+void element_moved(inventory_path, std::size_t old_index, std::size_t new_index)
+{
+    std::cout << "Inventory item moved from index " << old_index << " to " << new_index << '\n';
+}
+
+void selections_changed(inventory_path)
+{
+    std::cout << "Inventory selections changed: " << Json::out(view.inventory.sel()) << '\n';
+}
+
+void after_action(std::size_t action_index)
+{
+    std::cout << "Action submitted: [" << action_index << "]\n";
+}
+----
+image::godbolt_run.svg[Run,link=https://godbolt.org/z/7ad78Y9ec,window=read-later,align="left"]
