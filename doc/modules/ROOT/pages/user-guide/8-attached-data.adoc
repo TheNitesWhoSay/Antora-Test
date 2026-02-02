@@ -1,5 +1,4 @@
 = Attached Data
-- Attachment concept, auto-sync, compile-time opt-in, initializing/updating/reading attachments
 
 Sometimes in an editor there is data you want to track (e.g. sprite type & position), and data you do not (e.g. sprite animation frame & textures). If this data is strongly related but you want to maintain a strict layer of separation you might want a parallel array. This would be cumbersome, expensive, and prohibitively difficult to accomplish with notifications alone, so this is where attachments come in.
 

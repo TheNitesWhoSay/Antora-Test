@@ -54,7 +54,7 @@ Action user data can be used for other things as well, such as storing the times
 
 == Better Labels
 
-Strongly consider something akin to the following for labeling purposes as this will shunting string allocation, assembly, and storage costs onto every action:
+Strongly consider something akin to the following for labeling purposes as, unlike the above, you can avoid creating & storing repetitive strings with every action:
 
 [,cpp]
 ----

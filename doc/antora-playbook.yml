@@ -23,4 +23,4 @@ ui:
     contents: ./supplemental-ui/partials/toolbar.hbs
 asciidoc:
   attributes:
-    page-toclevels: 1
+    page-toclevels: 2

@@ -1,5 +1,4 @@
 = Actions, Events & Operations
-- Action methods (preferred), standalone actions, persistent actions, tracked elements, ops & op-methods, operator overloads
 
 == Terminology
 

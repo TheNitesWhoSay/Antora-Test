@@ -1,7 +1,5 @@
 = Tracked Types
 
-*Objective*: create a source data class, create a tracked class, initialize & read from a tracked class.
-
 == 1.) Create a source data class
 
 
@@ -45,7 +43,6 @@ You can use ``nf::make_tracked``, if your use case is trivially simple, e.g.
 auto jj = nf::make_tracked(Npc_data{.name = "jj", .hitpoints = 120});
 ----
 image::godbolt_run.svg[Run,link=https://godbolt.org/z/KnPEqa4Ej,window=read-later,align="left"]
-[TODO: Example here]
 
 In most cases you'll want to create your own tracked class by extending nf::tracked; you need to provide your source data class and your tracked class as template arguments, and you need a constructor initializing ``tracked`` with ``this``. e.g.
 
